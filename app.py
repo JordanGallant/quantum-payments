@@ -8,10 +8,6 @@ import random
 LAMBDA = 8
 
 def mac(secret, message):
-    """
-    Message Authentication Code using SHA-256
-    Returns a binary string of length LAMBDA
-    """
     combined = f"{secret}{message}"
     hash_obj = hashlib.sha256(combined.encode())
     hash_bytes = hash_obj.digest()
@@ -21,13 +17,6 @@ def mac(secret, message):
 
 
 class TTPProgram(Program):
-    """Trusted Third Party (Bank) Program
-    
-    NOTE: In this simplified implementation, TTP sends classical information (b, B)
-    instead of quantum states. The Client will prepare the quantum states locally
-    based on this information for demonstration purposes. In a real quantum payment
-    system, the TTP would send actual quantum states over a quantum channel.
-    """
     NODE_NAME = "TTP"
     
     def __init__(self):
@@ -78,10 +67,6 @@ class TTPProgram(Program):
                 state = f"|{'+' if b[j]=='0' else '-'}⟩"
             token_description.append(state)
         print(f"  |P⟩ = {' '.join(token_description)}")
-        
-        # STEP 1: Send token information to Client
-        # NOTE: In real implementation, these would be quantum states
-        # For demonstration, we send classical description
         print(f"\n{ns.sim_time()} ns: TTP sending token to Client...")
         csocket_client.send({"b": b, "B": B})
         print(f"{ns.sim_time()} ns: TTP sent quantum token information")
@@ -148,12 +133,6 @@ class TTPProgram(Program):
 
 
 class ClientProgram(Program):
-    """Client (Customer) Program
-    
-    NOTE: In this implementation, the Client receives classical information (b, B)
-    from TTP and prepares quantum states locally, then measures them. This simulates
-    the quantum protocol while working within SquidASM's constraints.
-    """
     NODE_NAME = "Client"
     
     def __init__(self, client_id, secret_token, merchant_id):
